@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Hellang.Middleware.ProblemDetails;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ScanService.API.Infrastructure;
@@ -29,6 +31,15 @@ public class Startup
             options.IncludeXmlComments(filePath);
         });
         
+        services.AddProblemDetails(options =>
+        {
+            options.Map<ArgumentException>(exception => new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = exception.Message,
+            });
+        });
+        
         services.AddMediatR(typeof(Startup));
         services.AddControllers();
 
@@ -42,6 +53,8 @@ public class Startup
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.UseProblemDetails();
+        
         app.UseSwagger();
         app.UseSwaggerUI();
         
