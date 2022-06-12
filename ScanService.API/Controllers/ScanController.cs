@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ScanService.API.Application;
+using ScanService.API.Entities;
 
 namespace ScanService.API.Controllers;
 
@@ -23,4 +24,12 @@ public class ScanController : ControllerBase
     [ProducesResponseType(typeof(Guid), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request) =>
         Ok(await _mediator.Send(request));
+
+    /// <summary>
+    /// Получение всех задач.
+    /// </summary>
+    [HttpGet("scans")]
+    [ProducesResponseType(typeof(ScanEntity), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetList() =>
+        Ok(await _mediator.Send(new GetTasksListRequest()));
 }
