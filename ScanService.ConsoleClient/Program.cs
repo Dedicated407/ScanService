@@ -1,15 +1,22 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Json;
+using ScanService.Client.Models;
 
 namespace ScanService.ConsoleClient;
 
-public static class Program
+public class Program
 {
     private const string Api = "https://localhost:5001";
-    private static readonly HttpClient _client = new();
+    private static Process? _processApi;
 
     public static void Main(string[] args)
     {
+        Console.WriteLine("Commands:\n" +
+                          "1. scan_service;\n" +
+                          "2. scan_util scan 'directory'\n" +
+                          "3. scan_util status 'id'\n" +
+                          "4. exit");
+        
         var input = Console.ReadLine()?.ToLower();
 
         while (input != "exit")
@@ -26,17 +33,14 @@ public static class Program
 
                     if (!string.IsNullOrEmpty(attribute))
                     {
-                        if (input.Contains("scan_util scan "))
+                        if (input.Contains("scan_util scan"))
                         {
                             CreateScan(attribute);
                         }
-                        else if (input.Contains("scan_util status "))
+
+                        if (input.Contains("scan_util status"))
                         {
                             GetScanStatus(attribute);
-                        }
-                        else
-                        {
-                            Console.WriteLine("There is no such command!");
                         }
                     }
                     else
@@ -46,12 +50,15 @@ public static class Program
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("There is no such command!");
+                    Console.WriteLine(e.Message);
                 }
             }
 
             input = Console.ReadLine()?.ToLower();
         }
+        
+        _processApi?.Kill();
+        GC.Collect();
     }
 
     private static void StartScanService()
@@ -69,9 +76,7 @@ public static class Program
             WindowStyle = ProcessWindowStyle.Hidden
         };
         
-        Process.Start(startInfo);
-        
-        _client.BaseAddress = new Uri(Api);
+        _processApi = Process.Start(startInfo);
         
         Console.WriteLine("Write <Exit> to exit...");
     }
@@ -91,6 +96,17 @@ public static class Program
 
     private static void GetScanStatus(string id)
     {
-        
+        using var client = new HttpClient();
+        try
+        {
+            var response = client.GetFromJsonAsync<GetTaskResponseModel>(Api + "/api/scan?id=" + id).Result;
+            Console.WriteLine("====== Scan result ======");
+            Console.WriteLine(response?.ToString());
+            Console.WriteLine("=========================");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Scan task in progress, please wait");
+        }
     }
 }

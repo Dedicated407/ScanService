@@ -9,4 +9,15 @@ public class GetTaskResponseModel
     public ushort RunDllDetects { get; set; }
     public ushort Errors { get; set; }
     public int ExecutionTime { get; set; }
+
+    public override string ToString()
+    {
+        return $"Directory: {Directory}\n" + 
+               $"Processed files: {ProcessedFiles}\n" +
+               $"JS detects: {JSDetects}\n" +
+               $"rm -rf detects: {RmRfDetects}\n" +
+               $"Rundll32 detects: {RunDllDetects}\n" +
+               $"Errors: {Errors}\n" +
+               $"Execution time: {ExecutionTime} sec";
+    }
 }

@@ -7,4 +7,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ScanService.Client\ScanService.Client.csproj" />
+    </ItemGroup>
+
 </Project>
