@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ScanService.API.Application;
 using ScanService.API.Entities;
+using ScanService.Client.Models;
 
 namespace ScanService.API.Controllers;
 
@@ -24,7 +25,15 @@ public class ScanController : ControllerBase
     [ProducesResponseType(typeof(Guid), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request) =>
         Ok(await _mediator.Send(request));
-
+    
+    /// <summary>
+    /// Получение информации о задаче.
+    /// </summary>
+    [HttpGet("scan")]
+    [ProducesResponseType(typeof(GetTaskResponseModel), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetTask([FromQuery] Guid id) =>
+        Ok(await _mediator.Send(new GetTaskRequest(id)));
+    
     /// <summary>
     /// Получение всех задач.
     /// </summary>
