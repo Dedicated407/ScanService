@@ -3,13 +3,14 @@
 public class ScanEntity
 {
     public Guid Id { get; private set; }
+    public bool IsFinished { get; set; } = false;
     public string Directory { get; private set; }
     public ushort ProcessedFiles { get; set; }
     public ushort JSDetects { get; set; }
     public ushort RmRfDetects { get; set; }
     public ushort RunDllDetects { get; set; }
     public ushort Errors { get; set; }
-    public TimeOnly ExecutionTime { get; set; }
+    public DateTime Time { get; set; }
 
     public ScanEntity(string directory) : base()
     {
