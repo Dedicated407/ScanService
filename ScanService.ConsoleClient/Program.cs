@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Net.Http.Json;
 
 namespace ScanService.ConsoleClient;
 
 public static class Program
 {
-    private const string Api = "https://localhost:5001/";
+    private const string Api = "https://localhost:5001";
     private static readonly HttpClient _client = new();
 
     public static void Main(string[] args)
@@ -56,12 +57,19 @@ public static class Program
     private static void StartScanService()
     {
         Console.WriteLine("Scan service was started.");
+        ProcessStartInfo startInfo = new ProcessStartInfo
+        {
+            FileName = Path.Combine(
+                Directory.GetParent(Directory.GetCurrentDirectory())
+                    .Parent.Parent.Parent.FullName,
+                @"ScanService.API\bin\Debug\net6.0\ScanService.API.exe"
+            ),
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            WindowStyle = ProcessWindowStyle.Hidden
+        };
         
-        Process.Start(Path.Combine(
-            Directory.GetParent(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName, 
-            @"ScanService.API\bin\Debug\net6.0\ScanService.API.exe"
-            ));
+        Process.Start(startInfo);
         
         _client.BaseAddress = new Uri(Api);
         
@@ -70,7 +78,15 @@ public static class Program
 
     private static void CreateScan(string directory)
     {
+        var requestModel = new
+        {
+            Directory = directory,
+        };
+
+        using var client = new HttpClient();
         
+        var response = client.PostAsJsonAsync(Api + "/api/scan", requestModel).Result;
+        Console.WriteLine($"Scan task was created with ID: {response.Content.ReadAsStringAsync().Result}");
     }
 
     private static void GetScanStatus(string id)
