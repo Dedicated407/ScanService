@@ -10,7 +10,8 @@ public class ScanEntity
     public ushort RmRfDetects { get; set; }
     public ushort RunDllDetects { get; set; }
     public ushort Errors { get; set; }
-    public DateTime Time { get; set; }
+    public DateTime StartTime { get; private set; }
+    public DateTime EndTime { get; set; }
 
     public ScanEntity(string directory) : base()
     {
@@ -20,5 +21,6 @@ public class ScanEntity
     private ScanEntity()
     {
         Id = Guid.NewGuid();
+        StartTime = DateTime.UtcNow;
     }
 }

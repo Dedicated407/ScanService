@@ -8,5 +8,5 @@ public class GetTaskResponseModel
     public ushort RmRfDetects { get; set; }
     public ushort RunDllDetects { get; set; }
     public ushort Errors { get; set; }
-    public DateTime Time { get; set; }
+    public int ExecutionTime { get; set; }
 }

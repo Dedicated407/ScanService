@@ -37,7 +37,7 @@ public class GetTaskRequestHandler : IRequestHandler<GetTaskRequest, GetTaskResp
             RmRfDetects = scanEntity.RmRfDetects,
             RunDllDetects = scanEntity.RunDllDetects,
             Errors = scanEntity.Errors,
-            Time = scanEntity.Time,
+            ExecutionTime = scanEntity.EndTime.Subtract(scanEntity.StartTime).Seconds
         };
 
         return responseModel;
