@@ -32,4 +32,15 @@ public sealed class DataContext : DbContext, IDataContext, IRepository
         await AddAsync(scanEntity, cancellationToken);
         await SaveChangesAsync(cancellationToken);
     }
+
+    public async Task Update(ScanEntity scanEntity, CancellationToken cancellationToken)
+    {
+        if (scanEntity == null)
+        {
+            throw new ArgumentNullException(nameof(scanEntity));
+        }
+        
+        Update(scanEntity);
+        await SaveChangesAsync(cancellationToken);
+    }
 }

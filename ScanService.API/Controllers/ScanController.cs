@@ -27,6 +27,14 @@ public class ScanController : ControllerBase
         Ok(await _mediator.Send(request));
     
     /// <summary>
+    /// Обновление информации о сканировании (Завершение задачи).
+    /// </summary>
+    [HttpPost("scan/finish")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> FinishTask([FromBody] FinishTaskRequest request) =>
+        Ok(await _mediator.Send(request));
+    
+    /// <summary>
     /// Получение информации о задаче.
     /// </summary>
     [HttpGet("scan")]

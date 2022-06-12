@@ -7,4 +7,5 @@ public interface IRepository
     public IQueryable<ScanEntity> Scans { get; }
 
     public Task Create(ScanEntity scanEntity, CancellationToken cancellationToken);
+    public Task Update(ScanEntity scanEntity, CancellationToken cancellationToken);
 }
